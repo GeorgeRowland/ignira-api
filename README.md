@@ -1,2 +1,0 @@
-# ignira-api
-Survey
