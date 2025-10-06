@@ -1,16 +1,15 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { formData, output } = req.body || {}
 
-  // Log or store in external service (e.g. Google Sheets)
   const notifyEmail = process.env.NOTIFY_EMAIL
   const message = `
 New Waitlist Signup:
-Name: ${formData.firstName} ${formData.lastName}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Region: ${formData.region}
+Name: ${formData?.firstName} ${formData?.lastName}
+Email: ${formData?.email}
+Phone: ${formData?.phone}
+Region: ${formData?.region}
 
 Output:
 - kWh: ${output?.annualKWhSaved}
@@ -20,5 +19,6 @@ Output:
 
   console.log("Waitlist signup:", message)
 
+  // You can hook this up to Sheets or Email later
   res.status(200).json({ ok: true, waitlisted: true })
 }
