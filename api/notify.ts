@@ -1,6 +1,6 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { event, formData, output } = req.body || {}
 
   const notifyEmail = process.env.NOTIFY_EMAIL
@@ -9,12 +9,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const subject = `[Ignira] ${event === 'request_call' ? 'Call Request' : 'Survey Completed'}`
   const message = `
 Event: ${event}
-Name: ${formData.firstName} ${formData.lastName}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Postcode: ${formData.postcode}
-Address: ${formData.addressLine}
-Region: ${formData.region}
+Name: ${formData?.firstName} ${formData?.lastName}
+Email: ${formData?.email}
+Phone: ${formData?.phone}
+Postcode: ${formData?.postcode}
+Address: ${formData?.addressLine}
+Region: ${formData?.region}
 
 Output:
 - Estimated Savings (kWh): ${output?.annualKWhSaved}
@@ -22,8 +22,8 @@ Output:
 - Estimated Install Cost: £${output?.installCostNet}
 `
 
-  console.log("Notification email:", subject, "\n", message)
+  console.log("Notification email:", subject, "\\n", message)
 
-  // This example just logs. Replace with Resend, SendGrid, etc.
+  // You can hook this up to Resend, SendGrid, or SMTP later
   res.status(200).json({ ok: true, logged: true })
 }
